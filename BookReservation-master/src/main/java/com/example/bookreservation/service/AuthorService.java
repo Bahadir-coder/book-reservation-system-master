@@ -23,6 +23,7 @@ public class AuthorService {
 
     public List<AuthorDto> getAllAuthors() {
         System.out.println("Get All Authors Started...");
+
         List<AuthorEntity> authorEntities = authorRepository.findAll();
         if (authorEntities.isEmpty()) {
             throw new NotFoundException("Authors Not Found!");
@@ -33,6 +34,7 @@ public class AuthorService {
 
     public AuthorDto findByFinCode(String finCode) {
         System.out.println("Find Author by FinCode Started...");
+
         AuthorEntity authorEntity = authorRepository.
                 findByAuthorFinCodeIgnoreCase(finCode)
                 .orElseThrow(() -> new NotFoundException("Author Not Found!"));
@@ -57,6 +59,8 @@ public class AuthorService {
 
     @Transactional
     public void deleteByFinCode(String finCode) {
+        System.out.println("Delete by Fin Code Started...");
+
         AuthorEntity authorEntity = authorRepository.
                 findByAuthorFinCodeIgnoreCase(finCode).
                 orElseThrow(() -> new NotFoundException("Author Not Found!"));

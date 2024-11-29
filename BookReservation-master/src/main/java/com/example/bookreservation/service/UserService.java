@@ -27,6 +27,7 @@ public class UserService {
 
     public List<UserDtoOutput> getAllUsers() {
         System.out.println("Get All Users Started...");
+
         List<UserEntity> userEntities = userRepository.findAll();
 
         if (userEntities.isEmpty()) {
@@ -39,6 +40,7 @@ public class UserService {
 
     public List<UserDtoOutputForUser> getAllUsersForUser() {
         System.out.println("Get All Users for User Started...");
+
         List<UserEntity> userEntities = userRepository.findAll();
 
         if (userEntities.isEmpty()) {
@@ -51,6 +53,7 @@ public class UserService {
 
     public UserDtoOutput findByFinCode(String finCode) {
         System.out.println("Find by FinCode Started...");
+
         Optional<UserEntity> userEntity = userRepository.
                 findByUserFinCodeIgnoreCase(finCode);
 
@@ -64,6 +67,7 @@ public class UserService {
 
     public UserDtoOutputForUser findByFinCodeForUser(String finCode) {
         System.out.println("Find by FinCode for User Started...");
+
         Optional<UserEntity> userEntity = userRepository.
                 findByUserFinCodeIgnoreCase(finCode);
 
@@ -78,6 +82,7 @@ public class UserService {
     @Transactional
     public void saveUser(UserDtoInput user) {
         System.out.println("Save User Started...");
+
         UserEntity userEntity = userMapper.
                 mapDtoToEntity(user);
 
@@ -98,6 +103,8 @@ public class UserService {
 
     @Transactional
     public void deleteByFinCode(String finCode) {
+        System.out.println("Delete by FinCode Started...");
+
         UserEntity userEntity = userRepository.
                 findByUserFinCodeIgnoreCase(finCode).
                 orElseThrow(() -> new NotFoundException("User Not Found!"));

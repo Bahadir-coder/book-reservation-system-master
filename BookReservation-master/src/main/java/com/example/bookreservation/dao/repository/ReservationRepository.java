@@ -11,5 +11,5 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<ReservationEntity, Integer> {
     ReservationEntity findByReservationCodeIgnoreCase(String code);
 
-    List<ReservationEntity> findByExpiryDateBefore(ZonedDateTime now);
+//    List<ReservationEntity> findByExpiryDateBefore(ZonedDateTime now);
 }

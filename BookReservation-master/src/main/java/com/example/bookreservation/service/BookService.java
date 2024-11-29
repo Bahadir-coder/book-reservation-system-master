@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -28,6 +29,7 @@ public class BookService {
 
     public List<BookDtoOutput> getAllBooks() {
         System.out.println("Get All Books Started...");
+
         List<BookEntity> bookEntities = bookRepository.findAll();
         if (bookEntities.isEmpty()) {
             throw new NotFoundException("Books Not Found!");
@@ -39,6 +41,7 @@ public class BookService {
 
     public BookDtoOutput findByName(String name) {
         System.out.println("Find by Name Started...");
+
         BookEntity bookEntity = bookRepository.
                 findByBookNameIgnoreCase(name);
         if (bookEntity == null) {
@@ -51,6 +54,7 @@ public class BookService {
 
     public List<BookDtoOutput> findByGenre(String genre) {
         System.out.println("Find by Genre Started...");
+
         List<BookEntity> bookEntities = bookRepository.
                 findByBookGenreIgnoreCase(genre);
         if (bookEntities.isEmpty()) {
@@ -75,31 +79,31 @@ public class BookService {
     public void saveBook(BookDtoInput bookDto) {
         System.out.println("Save Book Started...");
 
-        AuthorEntity authorEntity = authorRepository.
-                findByAuthorFinCodeIgnoreCase(bookDto.getAuthorFinCode())
-                .orElseGet(() -> {
-                    AuthorEntity newAuthor = new AuthorEntity();
-                    newAuthor.setAuthorFinCode(bookDto.getAuthorFinCode());
-                    newAuthor.setAuthorName(bookDto.getAuthorName());
-                    newAuthor.setAuthorSurname(bookDto.getAuthorSurname());
-                    authorRepository.save(newAuthor);
-                    return newAuthor;
-                });
-
-        BookEntity bookEntity = bookMapper.mapDtoToEntity(bookDto);
-        bookEntity.setAuthor(authorEntity);
-
-        List<BookEntity> bookEntities = bookRepository.findAll();
-        for (int i = 0; i < bookEntities.size(); i++) {
-            if (bookEntities.get(i).getBookCode().equals(bookEntity.getBookCode())) {
-                throw new FoundException("Book is also Found!");
+        List<AuthorEntity> authorEntities = authorRepository.findAll();
+        for (AuthorEntity author : authorEntities) {
+            for (int i = 0; i < authorEntities.size(); i++) {
+                if (author.getAuthorFinCode().equals(bookDto.getAuthorFinCodes().get(i))) {
+                    throw new FoundException("Author is also Found!");
+                }else{
+                    authorRepository.save(author);
+                }
             }
         }
+
+        List<BookEntity> bookEntities = bookRepository.findAll();
+        for(int i=0; i<bookEntities.size(); i++){
+            if(bookEntities.get(i).getBookCode().equals(bookDto.getBookCode())){
+                throw new FoundException("Book is also Found");
+            }
+        }
+        BookEntity bookEntity = bookMapper.mapDtoToEntity(bookDto);
         bookRepository.save(bookEntity);
     }
 
     @Transactional
     public void deleteByBookCode(String bookCode) {
+        System.out.println("Delete by Book Code Started...");
+
         BookEntity bookEntity = bookRepository.
                 findByBookCodeIgnoreCase(bookCode).
                 orElseThrow(() -> new NotFoundException("Book Not Found!"));

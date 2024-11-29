@@ -1,6 +1,5 @@
 package com.example.bookreservation.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -22,10 +22,11 @@ public class BookEntity {
     private String bookGenre;
     private String bookCode;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "authorID", referencedColumnName = "authorID")
-    @JsonBackReference
-    private AuthorEntity author;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "authors-books",
+            joinColumns = @JoinColumn(name = "bookID"),
+            inverseJoinColumns = @JoinColumn(name = "authorID"))
+    private List<AuthorEntity> authors;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JsonManagedReference

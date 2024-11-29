@@ -14,7 +14,6 @@ import com.example.bookreservation.model.output.ReservationDtoOutput;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +35,7 @@ public class ReservationService {
 
     public List<ReservationDtoOutput> getAllReservations() {
         System.out.println("Get All Reservations Started...");
+
         List<ReservationEntity> reservationEntities = reservationRepository.
                 findAll();
         if (reservationEntities.isEmpty()) {
@@ -48,6 +48,7 @@ public class ReservationService {
 
     public ReservationDtoOutput findByCode(String code) {
         System.out.println("Find by Reservation Code Started...");
+
         ReservationEntity reservationEntity = reservationRepository.
                 findByReservationCodeIgnoreCase(code);
         if (reservationEntity == null) {
@@ -86,16 +87,27 @@ public class ReservationService {
         reservationRepository.save(reservationEntity);
     }
 
-    @Transactional
-    public void deleteReservationAutomatic() {
-        System.out.println("Delete Reservation Automatic Started...");
-        List<ReservationEntity> expiredReservations = reservationRepository.
-                findByExpiryDateBefore(ZonedDateTime.now());
+//    @Transactional
+//    public void deleteReservationAutomatic() {
+//        System.out.println("Delete Reservation Automatic Started...");
+//        List<ReservationEntity> expiredReservations = reservationRepository.
+//                findByExpiryDateBefore(ZonedDateTime.now());
+//
+//        if (!expiredReservations.isEmpty()) {
+//            reservationRepository.deleteAll(expiredReservations);
+//        } else {
+//            System.out.println("Reservation Not Found");
+//        }
+//    }
 
-        if (!expiredReservations.isEmpty()) {
-            reservationRepository.deleteAll(expiredReservations);
-        } else {
-            System.out.println("Reservation Not Found");
+    @Transactional
+    public void deleteByReservationCode(String code){
+        System.out.println("Delete by Reservation Code Started...");
+
+        ReservationEntity reservationEntity = reservationRepository.findByReservationCodeIgnoreCase(code);
+        if(reservationEntity == null){
+            throw new NotFoundException("Reservation Not Found!");
         }
+        reservationRepository.delete(reservationEntity);
     }
 }

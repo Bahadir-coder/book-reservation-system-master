@@ -1,12 +1,12 @@
 package com.example.bookreservation.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -21,8 +21,7 @@ public class AuthorEntity {
     private String authorSurname;
     private String authorFinCode;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JsonManagedReference
+    @ManyToMany(mappedBy = "authors")
     private List<BookEntity> books;
 
     public AuthorEntity() {

@@ -13,8 +13,8 @@ public class ReservationScheduler {
         this.reservationService = reservationService;
     }
 
-    @Scheduled(fixedRate = 360000)
-    public void scheduleReservationDeletion() {
-        reservationService.deleteReservationAutomatic();
-    }
+//    @Scheduled(fixedRate = 360000)
+//    public void scheduleReservationDeletion() {
+//        reservationService.deleteReservationAutomatic();
+//    }
 }

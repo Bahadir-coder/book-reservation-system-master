@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class BookDtoOutput {
-    private String authorName;
-    private String authorSurname;
+    private List<String> authorNames;
+    private List<String> authorSurnames;
     private String bookName;
     private String bookGenre;
     private String bookCode;
