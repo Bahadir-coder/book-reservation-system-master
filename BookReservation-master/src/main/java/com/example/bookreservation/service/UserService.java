@@ -102,12 +102,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteByFinCode(String finCode) {
+    public void deleteByFinCode(String finCode){
         System.out.println("Delete by FinCode Started...");
 
         UserEntity userEntity = userRepository.
                 findByUserFinCodeIgnoreCase(finCode).
-                orElseThrow(() -> new NotFoundException("User Not Found!"));
-        userRepository.delete(userEntity);
+                orElseThrow(()-> new NotFoundException("User Not Found!"));
+        userRepository.deleteById(userEntity.getUserID());
     }
 }

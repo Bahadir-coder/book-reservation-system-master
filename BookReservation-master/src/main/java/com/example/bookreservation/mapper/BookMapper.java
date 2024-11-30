@@ -13,16 +13,16 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
-    @Mapping(target = "authors.authorFinCode", source = "authorFinCodes", qualifiedByName = "mapAuthorFinCodesToAuthors")
-    @Mapping(target = "authors.authorName", source = "authorNames", qualifiedByName = "mapAuthorNamesToAuthors")
-    @Mapping(target = "authors.authorSurname", source = "authorSurnames", qualifiedByName = "mapAuthorSurnamesToAuthors")
+    @Mapping(target = "authors", source = "authorFinCodes", qualifiedByName = "mapAuthorFinCodesToAuthors")
+//    @Mapping(target = "authors", source = "authorNames", qualifiedByName = "mapAuthorNamesToAuthors")
+//    @Mapping(target = "authors", source = "authorSurnames", qualifiedByName = "mapAuthorSurnamesToAuthors")
     @Mapping(target = "bookName", source = "bookName")
     @Mapping(target = "bookGenre", source = "bookGenre")
     @Mapping(target = "bookCode", source = "bookCode")
     BookEntity mapDtoToEntity(BookDtoInput bookDto);
 
-    @Mapping(target = "authorNames", source = "authors.authorName", qualifiedByName = "mapAuthorsToAuthorName")
-    @Mapping(target = "authorSurnames", source = "authors.authorSurname", qualifiedByName = "mapAuthorsToAuthorSurname")
+    @Mapping(target = "authorNames", source = "authors", qualifiedByName = "mapAuthorsToAuthorName")
+    @Mapping(target = "authorSurnames", source = "authors", qualifiedByName = "mapAuthorsToAuthorSurname")
     @Mapping(target = "bookName", source = "bookName")
     @Mapping(target = "bookGenre", source = "bookGenre")
     @Mapping(target = "bookCode", source = "bookCode")

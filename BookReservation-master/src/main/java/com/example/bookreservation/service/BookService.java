@@ -13,7 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -79,34 +79,38 @@ public class BookService {
     public void saveBook(BookDtoInput bookDto) {
         System.out.println("Save Book Started...");
 
-        List<AuthorEntity> authorEntities = authorRepository.findAll();
-        for (AuthorEntity author : authorEntities) {
-            for (int i = 0; i < authorEntities.size(); i++) {
-                if (author.getAuthorFinCode().equals(bookDto.getAuthorFinCodes().get(i))) {
-                    throw new FoundException("Author is also Found!");
-                }else{
-                    authorRepository.save(author);
-                }
+        List<BookEntity> books = bookRepository.findAll();
+        for (int i = 0; i < books.size(); i++) {
+            if (bookDto.getBookCode().equals(books.get(i).getBookCode())) {
+                throw new FoundException("Book is also Found!");
             }
         }
 
-        List<BookEntity> bookEntities = bookRepository.findAll();
-        for(int i=0; i<bookEntities.size(); i++){
-            if(bookEntities.get(i).getBookCode().equals(bookDto.getBookCode())){
-                throw new FoundException("Book is also Found");
-            }
-        }
+        List<AuthorEntity> authors = bookDto.getAuthorFinCodes().stream()
+                .map(authorFinCode -> {
+                    AuthorEntity author = authorRepository.findByAuthorFinCode(authorFinCode);
+                    if (author != null) {
+                        return author;
+                    } else {
+                        AuthorEntity newAuthor = new AuthorEntity();
+                        newAuthor.setAuthorFinCode(authorFinCode);
+                        return authorRepository.save(newAuthor);
+                    }
+                }).collect(Collectors.toList());
+
         BookEntity bookEntity = bookMapper.mapDtoToEntity(bookDto);
+        bookEntity.setAuthors(authors);
         bookRepository.save(bookEntity);
     }
 
     @Transactional
-    public void deleteByBookCode(String bookCode) {
+    public void deleteByBookCode(String bookCode){
         System.out.println("Delete by Book Code Started...");
 
         BookEntity bookEntity = bookRepository.
                 findByBookCodeIgnoreCase(bookCode).
-                orElseThrow(() -> new NotFoundException("Book Not Found!"));
-        bookRepository.delete(bookEntity);
+                orElseThrow(()-> new NotFoundException("Book Not Found!"));
+        bookRepository.deleteById(bookEntity.getBookID());
     }
+
 }

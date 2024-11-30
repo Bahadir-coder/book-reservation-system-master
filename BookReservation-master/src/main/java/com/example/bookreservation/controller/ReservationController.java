@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/reservation")
+@RequestMapping("/api/reservation")
 public class ReservationController {
     private final ReservationService reservationService;
 
@@ -29,5 +29,10 @@ public class ReservationController {
     @PostMapping("/save")
     public void saveReservation(@RequestBody ReservationDtoInput reservationDtoInput) {
         reservationService.saveReservation(reservationDtoInput);
+    }
+
+    @DeleteMapping("/delete/manual")
+    public void deleteManual(@RequestParam String reservationCode){
+        reservationService.deleteManual(reservationCode);
     }
 }

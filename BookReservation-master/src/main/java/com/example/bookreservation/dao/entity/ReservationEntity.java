@@ -21,12 +21,12 @@ public class ReservationEntity {
     private String reservationType;
     private String reservationCode;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "userID", referencedColumnName = "userID")
     @JsonBackReference
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "bookID", referencedColumnName = "bookID")
     @JsonBackReference
     private BookEntity book;

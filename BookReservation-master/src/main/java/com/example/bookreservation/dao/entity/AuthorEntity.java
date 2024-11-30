@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @Getter
@@ -21,7 +20,7 @@ public class AuthorEntity {
     private String authorSurname;
     private String authorFinCode;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(mappedBy = "authors", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     private List<BookEntity> books;
 
     public AuthorEntity() {

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/book")
+@RequestMapping("/api/book")
 public class BookController {
     private final BookService bookService;
 
@@ -42,7 +42,7 @@ public class BookController {
     }
 
     @DeleteMapping("/delete/by/{bookCode}")
-    public void deleteByBookCode(@PathVariable String bookCode) {
+    public void deleteByBookCode(@PathVariable String bookCode){
         bookService.deleteByBookCode(bookCode);
     }
 }

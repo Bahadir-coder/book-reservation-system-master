@@ -1,9 +1,11 @@
 package com.example.bookreservation.service;
 
 import com.example.bookreservation.dao.entity.AuthorEntity;
+import com.example.bookreservation.dao.entity.DeletedEntity;
 import com.example.bookreservation.dao.exception.FoundException;
 import com.example.bookreservation.dao.exception.NotFoundException;
 import com.example.bookreservation.dao.repository.AuthorRepository;
+import com.example.bookreservation.dao.repository.DeletedRepository;
 import com.example.bookreservation.mapper.AuthorMapper;
 import com.example.bookreservation.model.AuthorDto;
 import jakarta.transaction.Transactional;
@@ -15,10 +17,12 @@ import java.util.List;
 public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+    private final DeletedRepository deletedRepository;
 
-    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper, DeletedRepository deletedRepository) {
         this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
+        this.deletedRepository = deletedRepository;
     }
 
     public List<AuthorDto> getAllAuthors() {
@@ -58,12 +62,23 @@ public class AuthorService {
     }
 
     @Transactional
-    public void deleteByFinCode(String finCode) {
-        System.out.println("Delete by Fin Code Started...");
+    public void deleteByFinCode(String finCode){
+        System.out.println("Delete by FinCode Started...");
 
-        AuthorEntity authorEntity = authorRepository.
-                findByAuthorFinCodeIgnoreCase(finCode).
-                orElseThrow(() -> new NotFoundException("Author Not Found!"));
-        authorRepository.delete(authorEntity);
+        AuthorEntity authorEntity = authorRepository.findByAuthorFinCode(finCode);
+        if(authorEntity == null){
+            throw new NotFoundException("Author Not Found!");
+        }
+
+        for(int i=0; i<authorEntity.getBooks().size(); i++){
+            DeletedEntity deletedEntity = new DeletedEntity();
+            deletedEntity.setBookID(authorEntity.getBooks().get(i).getBookID());
+            deletedEntity.setBookName(authorEntity.getBooks().get(i).getBookName());
+            deletedEntity.setBookGenre(authorEntity.getBooks().get(i).getBookGenre());
+            deletedEntity.setBookCode(authorEntity.getBooks().get(i).getBookCode());
+            deletedRepository.save(deletedEntity);
+        }
+
+        authorRepository.deleteById(authorEntity.getAuthorID());
     }
 }

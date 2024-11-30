@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;
 
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/by/{finCode}")
-    public void deleteByFinCode(@PathVariable String finCode) {
+    public void deleteByFinCode(@PathVariable String finCode){
         userService.deleteByFinCode(finCode);
     }
 }

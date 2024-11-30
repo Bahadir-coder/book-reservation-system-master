@@ -87,9 +87,22 @@ public class ReservationService {
         reservationRepository.save(reservationEntity);
     }
 
+    @Transactional
+    public void deleteManual(String reservationCode){
+        System.out.println("Delete Manual Started...");
+
+        ReservationEntity reservationEntity = reservationRepository.
+                findByReservationCodeIgnoreCase(reservationCode);
+        if(reservationEntity == null){
+            throw new NotFoundException("Reservation Not Found!");
+        }
+        reservationRepository.
+                deleteById(reservationEntity.getReservationID());
+    }
+
 //    @Transactional
-//    public void deleteReservationAutomatic() {
-//        System.out.println("Delete Reservation Automatic Started...");
+//    public void deleteAutomatic() {
+//        System.out.println("Delete Automatic Started...");
 //        List<ReservationEntity> expiredReservations = reservationRepository.
 //                findByExpiryDateBefore(ZonedDateTime.now());
 //
@@ -99,15 +112,4 @@ public class ReservationService {
 //            System.out.println("Reservation Not Found");
 //        }
 //    }
-
-    @Transactional
-    public void deleteByReservationCode(String code){
-        System.out.println("Delete by Reservation Code Started...");
-
-        ReservationEntity reservationEntity = reservationRepository.findByReservationCodeIgnoreCase(code);
-        if(reservationEntity == null){
-            throw new NotFoundException("Reservation Not Found!");
-        }
-        reservationRepository.delete(reservationEntity);
-    }
 }

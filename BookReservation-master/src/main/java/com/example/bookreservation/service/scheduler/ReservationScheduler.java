@@ -15,6 +15,6 @@ public class ReservationScheduler {
 
 //    @Scheduled(fixedRate = 360000)
 //    public void scheduleReservationDeletion() {
-//        reservationService.deleteReservationAutomatic();
+//        reservationService.deleteAutomatic();
 //    }
 }

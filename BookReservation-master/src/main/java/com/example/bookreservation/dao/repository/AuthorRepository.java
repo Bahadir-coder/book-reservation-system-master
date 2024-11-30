@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends JpaRepository<AuthorEntity, Integer> {
     Optional<AuthorEntity> findByAuthorFinCodeIgnoreCase(String finCode);
+    AuthorEntity findByAuthorFinCode(String finCode);
 }
