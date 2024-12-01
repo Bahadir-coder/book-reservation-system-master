@@ -14,6 +14,7 @@ import com.example.bookreservation.model.output.ReservationDtoOutput;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -100,16 +101,16 @@ public class ReservationService {
                 deleteById(reservationEntity.getReservationID());
     }
 
-//    @Transactional
-//    public void deleteAutomatic() {
-//        System.out.println("Delete Automatic Started...");
-//        List<ReservationEntity> expiredReservations = reservationRepository.
-//                findByExpiryDateBefore(ZonedDateTime.now());
-//
-//        if (!expiredReservations.isEmpty()) {
-//            reservationRepository.deleteAll(expiredReservations);
-//        } else {
-//            System.out.println("Reservation Not Found");
-//        }
-//    }
+    @Transactional
+    public void deleteAutomatic() {
+        System.out.println("Delete Automatic Started...");
+        List<ReservationEntity> expiredReservations = reservationRepository.
+                findByExpiryDateBefore(ZonedDateTime.now());
+
+        if (!expiredReservations.isEmpty()) {
+            reservationRepository.deleteAll(expiredReservations);
+        } else {
+            System.out.println("Reservation Not Found");
+        }
+    }
 }
