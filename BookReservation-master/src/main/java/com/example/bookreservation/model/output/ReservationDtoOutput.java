@@ -12,9 +12,11 @@ import java.time.ZonedDateTime;
 @Data
 @Builder
 public class ReservationDtoOutput {
+    private String userFinCode;
     private String userName;
     private String userSurname;
     private String bookName;
+    private String bookCode;
     private String reservationType;
     private String reservationCode;
     private ZonedDateTime createdDate;
