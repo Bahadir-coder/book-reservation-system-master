@@ -1,11 +1,13 @@
 package com.example.bookreservation.dao.entity;
 
+import com.example.bookreservation.dao.entity.enums.BookType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -20,6 +22,14 @@ public class BookEntity {
     private String bookName;
     private String bookGenre;
     private String bookCode;
+    private Double bookPrice;
+    private Double bookAverageStar;
+
+    @ElementCollection
+    private List<Integer> bookStars = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private BookType bookType;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "authors-books",

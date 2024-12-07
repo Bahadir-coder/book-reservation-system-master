@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitablar</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+<div class="navbar">
+    <h1>Kitab Rezervasiyası</h1>
+    <nav>
+        <ul>
+            <li><a href="profile.html">Profilim</a></li>
+            <li><a href="logout.html">Çıxış</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="search-container">
+    <input type="text" id="search-book" placeholder="Kitab adı ilə axtarış et...">
+    <button onclick="searchBook()">Axtarış et</button>
+</div>
+
+<div class="books-list">
+    <h2>Kitablar</h2>
+    <div id="books-container">
+        <!-- Kitablar burada göstəriləcək -->
+    </div>
+</div>
+
+<div class="reservation-form">
+    <h3>Kitab Rezervasiya et</h3>
+    <form id="reservation-form">
+        <input type="text" id="bookCode" placeholder="Kitab kodu" required>
+        <input type="text" id="reservationType" placeholder="Rezervasiya növü" required>
+        <button type="submit">Rezervasiya et</button>
+    </form>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

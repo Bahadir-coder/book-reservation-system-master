@@ -4,15 +4,19 @@ import com.example.bookreservation.dao.entity.AuthorEntity;
 import com.example.bookreservation.dao.entity.BookEntity;
 import com.example.bookreservation.dao.exception.FoundException;
 import com.example.bookreservation.dao.exception.NotFoundException;
+import com.example.bookreservation.dao.exception.StarException;
 import com.example.bookreservation.dao.repository.AuthorRepository;
 import com.example.bookreservation.dao.repository.BookRepository;
 import com.example.bookreservation.mapper.BookMapper;
 import com.example.bookreservation.model.input.BookDtoInput;
 import com.example.bookreservation.model.output.BookDtoOutput;
+import com.example.bookreservation.service.specification.BookSpecification;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,13 +108,118 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteByBookCode(String bookCode){
+    public void deleteByBookCode(String bookCode) {
         System.out.println("Delete by Book Code Started...");
 
         BookEntity bookEntity = bookRepository.
                 findByBookCodeIgnoreCase(bookCode).
-                orElseThrow(()-> new NotFoundException("Book Not Found!"));
+                orElseThrow(() -> new NotFoundException("Book Not Found!"));
         bookRepository.deleteById(bookEntity.getBookID());
     }
 
+    @Transactional
+    public void saveStarByBookCode(Integer bookStar, String bookCode) {
+        System.out.println("Save Star by Book Code Started...");
+        Double sum = 0.0;
+        BookEntity bookEntity = bookRepository.
+                findByBookCode(bookCode);
+        if (bookEntity == null) {
+            throw new NotFoundException("Book Not Found!");
+        }
+        if (bookStar > 5) {
+            throw new StarException("The star cannot be bigger than 5");
+        }
+        bookEntity.getBookStars().add(bookStar);
+        for (int i = 0; i < bookEntity.getBookStars().size(); i++) {
+            sum += bookEntity.getBookStars().get(i);
+            Double average = sum / (bookEntity.getBookStars().size());
+            bookEntity.setBookAverageStar(average);
+        }
+        bookRepository.save(bookEntity);
+    }
+
+    public Double getAverageBookStars(String bookCode) {
+        System.out.println("Get Average Book Stars Started...");
+        BookEntity bookEntity = bookRepository.
+                findByBookCode(bookCode);
+        if (bookEntity == null) {
+            throw new NotFoundException("Book Not Found!");
+        }
+        Double average = bookEntity.getBookAverageStar();
+        return average;
+    }
+
+
+    public List<BookDtoOutput> getGreaterThanOrEqualByPrice(Double bookPrice) {
+        System.out.println("Get Greater Than or Equal by Price Started...");
+        Specification<BookEntity> specification = Specification.where(null);
+        if (bookPrice != null) {
+            specification = specification.
+                    and(BookSpecification.hasGreaterThanOrEqualByPrice(bookPrice));
+        }
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookRepository.findAll(specification));
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> getGreaterThanOrEqualByAverageStar(Double bookAverageStar) {
+        System.out.println("Get Greater Than or Equal by Average Star Started...");
+        Specification<BookEntity> specification = Specification.where(null);
+        if (bookAverageStar <= 5) {
+            specification = specification.
+                    and(BookSpecification.hasGreaterThanOrEqualByAverageStar(bookAverageStar));
+        }
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookRepository.findAll(specification));
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> sortCheapToExpensive() {
+        System.out.println("Sort Cheap to Expensive Started...");
+        List<BookEntity> bookEntities = bookRepository.
+                findAllBy(Sort.by("bookPrice").ascending());
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> sortExpensiveToCheap() {
+        System.out.println("Sort Expensive to Cheap Started...");
+        List<BookEntity> bookEntities = bookRepository.
+                findAllBy(Sort.by("bookPrice").descending());
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> sortLittleToMuch() {
+        System.out.println("Sort Little to Much Started...");
+        List<BookEntity> bookEntities = bookRepository.
+                findAllBy(Sort.by("bookAverageStar").ascending());
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> sortMuchToLittle() {
+        System.out.println("Sort Much to Little Started...");
+        List<BookEntity> bookEntities = bookRepository.
+                findAllBy(Sort.by("bookAverageStar").descending());
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> getEqualByBookType(String bookType){
+        System.out.println("Get Equal by Book Type Started...");
+        Specification<BookEntity> specification = Specification.where(null);
+        if(bookType != null){
+            specification = specification.and(BookSpecification.hasEqualByBookType(bookType));
+        }
+        List<BookEntity> bookEntities = bookRepository.
+                findAll(specification);
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
 }

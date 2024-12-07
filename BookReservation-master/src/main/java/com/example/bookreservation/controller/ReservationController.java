@@ -5,6 +5,7 @@ import com.example.bookreservation.model.output.ReservationDtoOutput;
 import com.example.bookreservation.service.ReservationService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,17 @@ public class ReservationController {
     }
 
     @DeleteMapping("/delete/manual")
-    public void deleteManual(@RequestParam String reservationCode){
+    public void deleteManual(@RequestParam String reservationCode) {
         reservationService.deleteManual(reservationCode);
+    }
+
+    @GetMapping("/get/greater/than/by/{createdDate}")
+    public List<ReservationDtoOutput> getGreaterThanByCreatedDate(@PathVariable ZonedDateTime createdDate) {
+        return reservationService.getGreaterThanByCreatedDate(createdDate);
+    }
+
+    @GetMapping("/get/greater/than/by/expiryDate")
+    public List<ReservationDtoOutput> getGreaterThanByExpiryDate(@RequestParam ZonedDateTime expiryDate) {
+        return reservationService.getGreaterThanByExpiryDate(expiryDate);
     }
 }

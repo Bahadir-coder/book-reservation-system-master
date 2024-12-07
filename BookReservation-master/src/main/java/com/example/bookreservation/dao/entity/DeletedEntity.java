@@ -17,6 +17,8 @@ public class DeletedEntity {
     private String bookName;
     private String bookGenre;
     private String bookCode;
+    private Double bookPrice;
+    private Double bookAverageStar;
 
     public DeletedEntity() {
     }

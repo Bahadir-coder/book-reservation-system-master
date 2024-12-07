@@ -76,6 +76,8 @@ public class AuthorService {
             deletedEntity.setBookName(authorEntity.getBooks().get(i).getBookName());
             deletedEntity.setBookGenre(authorEntity.getBooks().get(i).getBookGenre());
             deletedEntity.setBookCode(authorEntity.getBooks().get(i).getBookCode());
+            deletedEntity.setBookPrice(authorEntity.getBooks().get(i).getBookPrice());
+            deletedEntity.setBookAverageStar(authorEntity.getBooks().get(i).getBookAverageStar());
             deletedRepository.save(deletedEntity);
         }
 

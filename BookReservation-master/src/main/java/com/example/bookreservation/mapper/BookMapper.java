@@ -19,6 +19,8 @@ public interface BookMapper {
     @Mapping(target = "bookName", source = "bookName")
     @Mapping(target = "bookGenre", source = "bookGenre")
     @Mapping(target = "bookCode", source = "bookCode")
+    @Mapping(target = "bookPrice", source = "bookPrice")
+    @Mapping(target = "bookType", source = "bookType")
     BookEntity mapDtoToEntity(BookDtoInput bookDto);
 
     @Mapping(target = "authorNames", source = "authors", qualifiedByName = "mapAuthorsToAuthorName")
@@ -26,6 +28,9 @@ public interface BookMapper {
     @Mapping(target = "bookName", source = "bookName")
     @Mapping(target = "bookGenre", source = "bookGenre")
     @Mapping(target = "bookCode", source = "bookCode")
+    @Mapping(target = "bookPrice", source = "bookPrice")
+    @Mapping(target = "bookAverageStar", source = "bookAverageStar")
+    @Mapping(target = "bookType", source = "bookType")
     BookDtoOutput mapEntityToDto(BookEntity bookEntity);
 
     List<BookDtoOutput> mapEntityToDtos(List<BookEntity> bookEntity);

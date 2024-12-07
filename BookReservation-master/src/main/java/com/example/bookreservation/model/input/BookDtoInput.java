@@ -18,4 +18,6 @@ public class BookDtoInput {
     private String bookName;
     private String bookGenre;
     private String bookCode;
+    private Double bookPrice;
+    private String bookType;
 }
