@@ -2,11 +2,13 @@ package com.example.bookreservation.service;
 
 import com.example.bookreservation.dao.entity.AuthorEntity;
 import com.example.bookreservation.dao.entity.BookEntity;
+import com.example.bookreservation.dao.entity.DeletedEntity;
 import com.example.bookreservation.dao.exception.FoundException;
 import com.example.bookreservation.dao.exception.NotFoundException;
 import com.example.bookreservation.dao.exception.StarException;
 import com.example.bookreservation.dao.repository.AuthorRepository;
 import com.example.bookreservation.dao.repository.BookRepository;
+import com.example.bookreservation.dao.repository.DeletedRepository;
 import com.example.bookreservation.mapper.BookMapper;
 import com.example.bookreservation.model.input.BookDtoInput;
 import com.example.bookreservation.model.output.BookDtoOutput;
@@ -24,11 +26,13 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper bookMapper;
+    private final DeletedRepository deletedRepository;
 
-    public BookService(BookRepository bookRepository, AuthorRepository authorRepository, BookMapper bookMapper) {
+    public BookService(BookRepository bookRepository, AuthorRepository authorRepository, BookMapper bookMapper, DeletedRepository deletedRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.bookMapper = bookMapper;
+        this.deletedRepository = deletedRepository;
     }
 
     public List<BookDtoOutput> getAllBooks() {
@@ -114,6 +118,14 @@ public class BookService {
         BookEntity bookEntity = bookRepository.
                 findByBookCodeIgnoreCase(bookCode).
                 orElseThrow(() -> new NotFoundException("Book Not Found!"));
+        DeletedEntity deletedEntity = new DeletedEntity();
+        deletedEntity.setBookID(bookEntity.getBookID());
+        deletedEntity.setBookName(bookEntity.getBookName());
+        deletedEntity.setBookGenre(bookEntity.getBookGenre());
+        deletedEntity.setBookCode(bookEntity.getBookCode());
+        deletedEntity.setBookPrice(bookEntity.getBookPrice());
+        deletedEntity.setBookAverageStar(bookEntity.getBookAverageStar());
+        deletedRepository.save(deletedEntity);
         bookRepository.deleteById(bookEntity.getBookID());
     }
 

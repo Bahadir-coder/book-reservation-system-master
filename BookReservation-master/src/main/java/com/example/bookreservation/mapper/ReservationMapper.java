@@ -22,6 +22,7 @@ public interface ReservationMapper {
     @Mapping(target = "userName", source = "user.userName")
     @Mapping(target = "userSurname", source = "user.userSurname")
     @Mapping(target = "bookName", source = "book.bookName")
+    @Mapping(target = "bookCode", source = "book.bookCode")
     @Mapping(target = "reservationType", source = "reservationType")
     @Mapping(target = "reservationCode", source = "reservationCode")
     @Mapping(target = "createdDate", source = "createdDate")

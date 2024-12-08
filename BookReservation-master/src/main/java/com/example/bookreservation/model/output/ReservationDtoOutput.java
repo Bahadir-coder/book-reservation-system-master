@@ -15,6 +15,7 @@ public class ReservationDtoOutput {
     private String userName;
     private String userSurname;
     private String bookName;
+    private String bookCode;
     private String reservationType;
     private String reservationCode;
     private ZonedDateTime createdDate;
