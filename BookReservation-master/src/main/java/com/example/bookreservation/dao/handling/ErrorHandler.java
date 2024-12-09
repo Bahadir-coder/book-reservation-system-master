@@ -1,5 +1,6 @@
 package com.example.bookreservation.dao.handling;
 
+import com.example.bookreservation.dao.exception.BookTypeException;
 import com.example.bookreservation.dao.exception.FoundException;
 import com.example.bookreservation.dao.exception.NotFoundException;
 import com.example.bookreservation.dao.exception.StarException;
@@ -25,7 +26,13 @@ public class ErrorHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(StarException.class)
-    public ExceptionDto starHandler(RuntimeException exception){
+    public ExceptionDto starHandler(RuntimeException exception) {
+        return new ExceptionDto(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BookTypeException.class)
+    public ExceptionDto bookTypeHandler(RuntimeException exception) {
         return new ExceptionDto(exception.getMessage());
     }
 }

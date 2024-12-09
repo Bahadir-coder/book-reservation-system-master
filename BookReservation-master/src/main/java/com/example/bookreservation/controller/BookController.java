@@ -12,82 +12,87 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    public BookController(BookService bookService){
+    public BookController(BookService bookService) {
         this.bookService = bookService;
     }
 
     @GetMapping("/get/All")
-    public List<BookDtoOutput> getAllBooks(){
+    public List<BookDtoOutput> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @GetMapping("/find/by/Name")
-    public BookDtoOutput findByName(@RequestParam String bookName){
+    public BookDtoOutput findByName(@RequestParam String bookName) {
         return bookService.findByName(bookName);
     }
 
     @GetMapping("/find/by/Genre")
-    public List<BookDtoOutput> findByGenre(@RequestParam String bookGenre){
+    public List<BookDtoOutput> findByGenre(@RequestParam String bookGenre) {
         return bookService.findByGenre(bookGenre);
     }
 
     @GetMapping("/find/by/Code")
-    public BookDtoOutput findByCode(@RequestParam String bookCode){
+    public BookDtoOutput findByCode(@RequestParam String bookCode) {
         return bookService.findByCode(bookCode);
     }
 
     @PostMapping("/save")
-    public void saveBook(@RequestBody BookDtoInput bookDtoInput){
+    public void saveBook(@RequestBody BookDtoInput bookDtoInput) {
         bookService.saveBook(bookDtoInput);
     }
 
     @DeleteMapping("/delete/by/Code")
-    public void deleteByCode(@RequestParam String bookCode){
+    public void deleteByCode(@RequestParam String bookCode) {
         bookService.deleteByBookCode(bookCode);
     }
 
     @PostMapping("/save/Star/by/{bookCode}")
-    public void saveStarByBookCode(@RequestParam Integer bookStar, @PathVariable String bookCode){
+    public void saveStarByBookCode(@RequestParam Integer bookStar, @PathVariable String bookCode) {
         bookService.saveStarByBookCode(bookStar, bookCode);
     }
 
     @GetMapping("/get/average/bookStars")
-    public Double getAverageBookStars(@RequestParam String bookCode){
+    public Double getAverageBookStars(@RequestParam String bookCode) {
         return bookService.getAverageBookStars(bookCode);
     }
 
     @GetMapping("/get/greater/than/or/equal/by/{bookPrice}")
-    public List<BookDtoOutput> getGreaterThanOrEqualByPrice(@PathVariable Double bookPrice){
+    public List<BookDtoOutput> getGreaterThanOrEqualByPrice(@PathVariable Double bookPrice) {
         return bookService.getGreaterThanOrEqualByPrice(bookPrice);
     }
 
     @GetMapping("/get/greater/than/or/equal/{bookAverageStar}")
-    public List<BookDtoOutput> getGreaterThanOrEqualByAverageStar(@PathVariable Double bookAverageStar){
+    public List<BookDtoOutput> getGreaterThanOrEqualByAverageStar(@PathVariable Double bookAverageStar) {
         return bookService.getGreaterThanOrEqualByAverageStar(bookAverageStar);
     }
 
     @GetMapping("/sort/cheap/to/expensive")
-    public List<BookDtoOutput> sortCheapToExpensive(){
+    public List<BookDtoOutput> sortCheapToExpensive() {
         return bookService.sortCheapToExpensive();
     }
 
     @GetMapping("/sort/expensive/to/cheap")
-    public List<BookDtoOutput> sortExpensiveToCheap(){
+    public List<BookDtoOutput> sortExpensiveToCheap() {
         return bookService.sortExpensiveToCheap();
     }
 
     @GetMapping("/sort/little/to/much")
-    public List<BookDtoOutput> sortLittleToMuch(){
+    public List<BookDtoOutput> sortLittleToMuch() {
         return bookService.sortLittleToMuch();
     }
 
     @GetMapping("/sort/much/to/little")
-    public List<BookDtoOutput> sortMuchToLittle(){
+    public List<BookDtoOutput> sortMuchToLittle() {
         return bookService.sortMuchToLittle();
     }
 
     @GetMapping("/get/equal/by/{bookType}")
-    public List<BookDtoOutput> getEqualByBookType(@PathVariable String bookType){
+    public List<BookDtoOutput> getEqualByBookType(@PathVariable String bookType) {
         return bookService.getEqualByBookType(bookType);
+    }
+
+    @GetMapping("/get/between/{bookMinPrice}/and/{bookMaxPrice}")
+    public List<BookDtoOutput> getBetweenBookMinPriceAndBookMaxPrice(@PathVariable Double bookMinPrice, @PathVariable Double bookMaxPrice) {
+        return bookService.getBetweenBookMinPriceAndBookMaxPrice(bookMinPrice, bookMaxPrice);
     }
 }

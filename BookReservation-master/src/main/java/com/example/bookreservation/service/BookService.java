@@ -3,6 +3,8 @@ package com.example.bookreservation.service;
 import com.example.bookreservation.dao.entity.AuthorEntity;
 import com.example.bookreservation.dao.entity.BookEntity;
 import com.example.bookreservation.dao.entity.DeletedEntity;
+import com.example.bookreservation.dao.entity.enums.BookType;
+import com.example.bookreservation.dao.exception.BookTypeException;
 import com.example.bookreservation.dao.exception.FoundException;
 import com.example.bookreservation.dao.exception.NotFoundException;
 import com.example.bookreservation.dao.exception.StarException;
@@ -105,6 +107,12 @@ public class BookService {
                         return authorRepository.save(newAuthor);
                     }
                 }).collect(Collectors.toList());
+
+        if(!bookDto.getBookType().equals(BookType.VIP.name())){
+            if(!bookDto.getBookType().equals(BookType.SIMPLE.name())){
+                throw new BookTypeException("Book Type is Invalid!");
+            }
+        }
 
         BookEntity bookEntity = bookMapper.mapDtoToEntity(bookDto);
         bookEntity.setAuthors(authors);
@@ -222,11 +230,27 @@ public class BookService {
         return bookDtoOutputs;
     }
 
-    public List<BookDtoOutput> getEqualByBookType(String bookType){
+    public List<BookDtoOutput> getEqualByBookType(String bookType) {
         System.out.println("Get Equal by Book Type Started...");
         Specification<BookEntity> specification = Specification.where(null);
-        if(bookType != null){
+        if (bookType != null) {
             specification = specification.and(BookSpecification.hasEqualByBookType(bookType));
+        }
+        List<BookEntity> bookEntities = bookRepository.
+                findAll(specification);
+        List<BookDtoOutput> bookDtoOutputs = bookMapper.
+                mapEntityToDtos(bookEntities);
+        return bookDtoOutputs;
+    }
+
+    public List<BookDtoOutput> getBetweenBookMinPriceAndBookMaxPrice(Double bookMinPrice, Double bookMaxPrice) {
+        System.out.println("Get Between Book Min Price and Book Max Price Started...");
+        Specification<BookEntity> specification = Specification.where(null);
+        if (bookMinPrice != null) {
+            if (bookMaxPrice != null) {
+                specification = specification.
+                        and(BookSpecification.hasBetweenBookMinPriceAndBookMaxPrice(bookMinPrice, bookMaxPrice));
+            }
         }
         List<BookEntity> bookEntities = bookRepository.
                 findAll(specification);
