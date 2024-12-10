@@ -7,6 +7,12 @@ function registerUser() {
     const userTel = document.getElementById('userTel').value;
     const userEmail = document.getElementById('userEmail').value;
 
+    // Form doğrulaması
+    if (!userName || !userSurname || !userFinCode || !userTel || !userEmail) {
+        displayError('Bütün sahələri doldurduğunuzdan əmin olun!');
+        return;
+    }
+
     const userData = {
         userName: userName,
         userSurname: userSurname,
@@ -25,7 +31,7 @@ function registerUser() {
         .then(response => {
             if (!response.ok) {
                 return response.json().then(err => {
-                    throw new Error(err.message); // Əgər xətalı cavab alırıqsa, səhv mesajını göstəririk
+                    throw new Error(err.message || 'Qeydiyyat zamanı xəta baş verdi.');
                 });
             }
             return response.json();
@@ -37,8 +43,13 @@ function registerUser() {
         })
         .catch(error => {
             // Xəta mesajını istifadəçiyə göstəririk
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = error.message;
-            errorMessage.style.display = 'block'; // Xəta mesajını göstəririk
+            displayError(error.message);
         });
+}
+
+// Xəta mesajını göstərmək üçün əlavə funksiya
+function displayError(message) {
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block'; // Xəta mesajını göstəririk
 }

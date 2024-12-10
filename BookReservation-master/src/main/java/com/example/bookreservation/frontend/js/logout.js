@@ -17,22 +17,27 @@ function loginUser() {
         body: JSON.stringify(loginData),
     })
         .then(response => {
+            // Xətalı cavab alarsaq, xəta mesajını göstəririk
             if (!response.ok) {
                 return response.json().then(err => {
-                    throw new Error(err.message);
+                    throw new Error(err.message || 'Xəta baş verdi');
                 });
             }
             return response.json();
         })
         .then(data => {
             // Uğurlu login
-            localStorage.setItem('userToken', data.token); // Token saxlanılır
-            window.location.href = "dashboard.html"; // Ana səhifəyə yönləndirilir
+            if (data && data.token) {
+                localStorage.setItem('userToken', data.token); // Token saxlanılır
+                window.location.href = "dashboard.html"; // Ana səhifəyə yönləndirilir
+            } else {
+                throw new Error('Serverdən düzgün cavab alınmadı');
+            }
         })
         .catch(error => {
             // Xəta baş veribsə mesajı göstəririk
             const errorMessage = document.getElementById('errorMessage');
             errorMessage.textContent = error.message;
-            errorMessage.style.display = 'block';
+            errorMessage.style.display = 'block'; // Xəta mesajını göstəririk
         });
 }
